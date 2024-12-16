@@ -1,93 +1,91 @@
 #include "Arduino.h"
 #include "LCD\lgfx_gc9a01.hpp"
-#include <vector>
+#include <lv_demo.h>
+#include <lvgl.h>
 
-#define LINE_COUNT 6
+/*Change to your screen resolution*/
+static const uint16_t screenWidth  = 320;
+static const uint16_t screenHeight = 240;
 
-static LGFX_GC9A01 lcd;
+static lv_disp_draw_buf_t draw_buf;
+static lv_color_t buf[2][ screenWidth * 10 ];
 
-static std::vector<int> points[LINE_COUNT];
-static int colors[] = { TFT_RED, TFT_GREEN, TFT_BLUE, TFT_CYAN, TFT_MAGENTA, TFT_YELLOW };
-static int xoffset, yoffset, point_count;
-
-int getBaseColor(int x, int y)
+static LGFX_GC9A01 gfx;
+/* Display flushing */
+void my_disp_flush( lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p )
 {
-  return ((x^y)&3 || ((x-xoffset)&31 && y&31) ? TFT_BLACK : ((!y || x == xoffset) ? TFT_WHITE : TFT_DARKGREEN));
+    if (gfx.getStartCount() == 0)
+    {   // Processing if not yet started
+        gfx.startWrite();
+    }
+    gfx.pushImageDMA( area->x1
+                    , area->y1
+                    , area->x2 - area->x1 + 1
+                    , area->y2 - area->y1 + 1
+                    , ( lgfx::swap565_t* )&color_p->full);
+    lv_disp_flush_ready( disp );
 }
 
-void setup(void)
+void sd_access_sample( void )
 {
-  // SPIバスとパネルの初期化を実行すると使用可能になります。
-  lcd.begin(PIN_LCD_SCLK, PIN_LCD_MOSI, PIN_LCD_DC, PIN_LCD_CS,
+    if (gfx.getStartCount() > 0)
+    {   // Free the bus before accessing the SD card
+        gfx.endWrite();
+    }
+
+    // Something to manipulate the SD card.
+    //auto file = SD.open("/file");
+    //file.close();
+}
+
+/*Read the touchpad*/
+void my_touchpad_read( lv_indev_drv_t * indev_driver, lv_indev_data_t * data )
+{
+    uint16_t touchX, touchY;
+
+    data->state = LV_INDEV_STATE_REL;
+
+    if( gfx.getTouch( &touchX, &touchY ) )
+    {
+        data->state = LV_INDEV_STATE_PR;
+
+        /*Set the coordinates*/
+        data->point.x = touchX;
+        data->point.y = touchY;
+    }
+}
+
+void setup()
+{
+    gfx.begin(PIN_LCD_SCLK, PIN_LCD_MOSI, PIN_LCD_DC, PIN_LCD_CS,
                   PIN_LCD_RST, PIN_LCD_BL);
 
-  if (lcd.width() < lcd.height()) lcd.setRotation(lcd.getRotation() ^ 1);
+    lv_init();
+    lv_disp_draw_buf_init( &draw_buf, buf[0], buf[1], screenWidth * 10 );
 
-  yoffset = lcd.height() >> 1;
-  xoffset = lcd.width()  >> 1;
-  point_count = lcd.width() + 1;
+    /*Initialize the display*/
+    static lv_disp_drv_t disp_drv;
+    lv_disp_drv_init( &disp_drv );
+    /*Change the following line to your display resolution*/
+    disp_drv.hor_res = screenWidth;
+    disp_drv.ver_res = screenHeight;
+    disp_drv.flush_cb = my_disp_flush;
+    disp_drv.draw_buf = &draw_buf;
+    lv_disp_drv_register( &disp_drv );
 
-  for (int i = 0; i < LINE_COUNT; i++)
-  {
-    points[i].resize(point_count);
-  }
+    /*Initialize the input device driver*/
+    static lv_indev_drv_t indev_drv;
+    lv_indev_drv_init( &indev_drv );
+    indev_drv.type = LV_INDEV_TYPE_POINTER;
+    indev_drv.read_cb = my_touchpad_read;
+    lv_indev_drv_register( &indev_drv );
 
-  lcd.startWrite();
-  lcd.setAddrWindow(0, 0, lcd.width(), lcd.height());
-  for (int y = 0; y < lcd.height(); y++)
-  {
-    for (int x = 0; x < lcd.width(); x++)
-    {
-      lcd.writeColor(getBaseColor(x, y - yoffset), 1);
-    }
-  }
-  lcd.endWrite();
+
+    lv_demo_benchmark();
 }
 
-uint32_t count = ~0;
-void loop(void)
+void loop()
 {
-  static int prev_sec;
-  static int fps;
-  ++fps;
-  int sec = millis() / 1000;
-  if (prev_sec != sec)
-  {
-    prev_sec = sec;
-    lcd.setCursor(0,0);
-    lcd.printf("fps:%03d", fps);
-    fps = 0;
-  }
-
-  static int count;
-
-  for (int i = 0; i < LINE_COUNT; i++)
-  {
-    points[i][count % point_count] = (sinf((float)count / (10 + 30 * i))+sinf((float)count / (13 + 37 * i))) * (lcd.height() >> 2);
-  }
-
-  ++count;
-
-  lcd.startWrite();
-  int index1 = count % point_count;
-  for (int x = 0; x < point_count-1; x++)
-  {
-    int index0 = index1;
-    index1 = (index0 +1) % point_count;
-    for (int i = 0; i < LINE_COUNT; i++)
-    {
-      int y = points[i][index0];
-      if (y != points[i][index1])
-      {
-        lcd.writePixel(x, y + yoffset, getBaseColor(x, y));
-      }
-    }
-
-    for (int i = 0; i < LINE_COUNT; i++)
-    {
-      int y = points[i][index1];
-      lcd.writePixel(x, y + yoffset, colors[i]);
-    }
-  }
-  lcd.endWrite();
+  lv_timer_handler(); /* let the GUI do its work */
+  delay(1);
 }
