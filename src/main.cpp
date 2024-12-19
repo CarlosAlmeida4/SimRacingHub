@@ -1,7 +1,9 @@
 #include "Arduino.h"
 #include "LCD\lgfx_gc9a01.hpp"
+#include "ui\ui.h"
 #include <lv_demo.h>
 #include <lvgl.h>
+#include <string.h>
 
 /*Change to your screen resolution*/
 static const uint16_t screenWidth  = 320;
@@ -80,12 +82,16 @@ void setup()
     indev_drv.read_cb = my_touchpad_read;
     lv_indev_drv_register( &indev_drv );
 
+    ui_init();
 
-    lv_demo_benchmark();
+    //lv_demo_benchmark();
 }
 
 void loop()
 {
+  static uint8_t count = 0;
   lv_timer_handler(); /* let the GUI do its work */
+  _ui_label_set_property(uic_CurrentGear,_UI_LABEL_PROPERTY_TEXT,String(count).c_str());
+  count++;
   delay(1);
 }
