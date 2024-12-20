@@ -20,6 +20,7 @@ extern "C" {
 void ui_GearScreen_screen_init(void);
 extern lv_obj_t * ui_GearScreen;
 extern lv_obj_t * ui_CurrentGear;
+extern lv_obj_t * ui_Spinner2;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_GearScreen;
 extern lv_obj_t * uic_CurrentGear;
