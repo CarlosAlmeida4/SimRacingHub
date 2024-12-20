@@ -59,6 +59,8 @@ void my_touchpad_read( lv_indev_drv_t * indev_driver, lv_indev_data_t * data )
 
 void setup()
 {
+    Serial.begin(115200);
+
     gfx.begin(PIN_LCD_SCLK, PIN_LCD_MOSI, PIN_LCD_DC, PIN_LCD_CS,
                   PIN_LCD_RST, PIN_LCD_BL);
 
