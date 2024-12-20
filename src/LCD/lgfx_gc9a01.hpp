@@ -40,11 +40,11 @@ class LGFX_GC9A01 : public lgfx::LGFX_Device {
       cfg.pin_rst = pin_rst;
       cfg.pin_busy = -1;
 
-      cfg.panel_width = 230;
+      cfg.panel_width = 240;
       cfg.panel_height = 240;
       cfg.memory_width = 240;
       cfg.memory_height = 240;
-      cfg.offset_x = 990;
+      cfg.offset_x = 0;
       cfg.offset_y = 0;
       cfg.offset_rotation = 0;
       cfg.dummy_read_pixel = 16;
