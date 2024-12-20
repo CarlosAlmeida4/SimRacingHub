@@ -13,9 +13,17 @@ void ui_GearScreen_screen_init(void)
     ui_CurrentGear = lv_label_create(ui_GearScreen);
     lv_obj_set_width(ui_CurrentGear, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_CurrentGear, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_CurrentGear, 1);
-    lv_obj_set_y(ui_CurrentGear, 0);
+    lv_obj_set_x(ui_CurrentGear, 0);
+    lv_obj_set_y(ui_CurrentGear, 2);
     lv_obj_set_align(ui_CurrentGear, LV_ALIGN_CENTER);
+
+    ui_Spinner2 = lv_spinner_create(ui_GearScreen, 1000, 90);
+    lv_obj_set_width(ui_Spinner2, 240);
+    lv_obj_set_height(ui_Spinner2, 240);
+    lv_obj_set_x(ui_Spinner2, 0);
+    lv_obj_set_y(ui_Spinner2, -1);
+    lv_obj_set_align(ui_Spinner2, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_Spinner2, LV_OBJ_FLAG_CLICKABLE);      /// Flags
 
     uic_GearScreen = ui_GearScreen;
     uic_CurrentGear = ui_CurrentGear;
