@@ -1,20 +1,11 @@
 
 #include "Arduino.h"
+#include <FreeRTOS.h>
 #include "LCD\lgfx_gc9a01.hpp"
-#include "ui\ui.h"
-#include <lv_demo.h>
-#include <lvgl.h>
-#include <string.h>
 #include <Adafruit_TinyUSB.h>
+#include "UIHandler\UIHandler.h"
 
-/*Change to your screen resolution*/
-static const uint16_t screenWidth  = 240;
-static const uint16_t screenHeight = 240;
 
-static lv_disp_draw_buf_t draw_buf;
-static lv_color_t buf[2][ screenWidth * 10 ];
-
-static LGFX_GC9A01 gfx;
 
 // HID report descriptor using TinyUSB's template
 // Single Report (no ID) descriptor
@@ -30,79 +21,14 @@ Adafruit_USBD_HID usb_hid;
 // - For Gamepad Hat    Bit Mask see  hid_gamepad_hat_t
 hid_gamepad_report_t gp;
 
-/* Display flushing */
-void my_disp_flush( lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p )
-{
-    if (gfx.getStartCount() == 0)
-    {   // Processing if not yet started
-        gfx.startWrite();
-    }
-    gfx.pushImageDMA( area->x1
-                    , area->y1
-                    , area->x2 - area->x1 + 1
-                    , area->y2 - area->y1 + 1
-                    , ( lgfx::swap565_t* )&color_p->full);
-    lv_disp_flush_ready( disp );
-}
-
-void sd_access_sample( void )
-{
-    if (gfx.getStartCount() > 0)
-    {   // Free the bus before accessing the SD card
-        gfx.endWrite();
-    }
-
-    // Something to manipulate the SD card.
-    //auto file = SD.open("/file");
-    //file.close();
-}
-
-/*Read the touchpad*/
-void my_touchpad_read( lv_indev_drv_t * indev_driver, lv_indev_data_t * data )
-{
-    uint16_t touchX, touchY;
-
-    data->state = LV_INDEV_STATE_REL;
-
-    if( gfx.getTouch( &touchX, &touchY ) )
-    {
-        data->state = LV_INDEV_STATE_PR;
-
-        /*Set the coordinates*/
-        data->point.x = touchX;
-        data->point.y = touchY;
-    }
-}
-
 void setup() {
   Serial.begin(115200);
   
   Serial.println("Adafruit TinyUSB HID Gamepad example");
-
-  gfx.begin(PIN_LCD_SCLK, PIN_LCD_MOSI, PIN_LCD_DC, PIN_LCD_CS,
-                  PIN_LCD_RST, PIN_LCD_BL);
-
-  lv_init();
   
-  lv_disp_draw_buf_init( &draw_buf, buf[0], buf[1], screenWidth * 10 );
-  /*Initialize the display*/
-  static lv_disp_drv_t disp_drv;
-  lv_disp_drv_init( &disp_drv );
-  /*Change the following line to your display resolution*/
-  disp_drv.hor_res = screenWidth;
-  disp_drv.ver_res = screenHeight;
-  disp_drv.flush_cb = my_disp_flush;
-  disp_drv.draw_buf = &draw_buf;
-  lv_disp_drv_register( &disp_drv );
-  /*Initialize the input device driver*/
-  static lv_indev_drv_t indev_drv;
-  lv_indev_drv_init( &indev_drv );
-  indev_drv.type = LV_INDEV_TYPE_POINTER;
-  indev_drv.read_cb = my_touchpad_read;
-  lv_indev_drv_register( &indev_drv );
-  ui_init();
-
+  UIHandlerInit();
 }
+
 
 void setup1()
 {
@@ -126,12 +52,7 @@ void setup1()
 }
 
 void loop() {
-  static uint8_t count = 0;
-  lv_timer_handler(); /* let the GUI do its work */
-  _ui_label_set_property(uic_CurrentGear,_UI_LABEL_PROPERTY_TEXT,String(count).c_str());
-  count++;
-  delay(1);
-  // */
+  UIHandlerCyclic();
 }
 
 void loop1()
