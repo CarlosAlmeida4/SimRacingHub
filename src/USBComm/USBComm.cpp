@@ -56,13 +56,19 @@ void USBComm::Cyclic()
     gp.hat = 0;
     gp.buttons = 0;
     usb_hid.sendReport(0, &gp, sizeof(gp));
-
+    delay(100);
     // Test buttons (up to 32 buttons)
-    for (int i = 0; i < 32; ++i) {
+    static int aux = 0;
+    Serial.print("Pressing button ");
+    Serial.println(aux);
+    gp.buttons = (1U << aux);
+    usb_hid.sendReport(0, &gp, sizeof(gp));
+    aux++;
+    if(aux>32) aux=0;
+    /*for (int i = 0; i < 32; ++i) {
       Serial.print("Pressing button ");
       Serial.println(i);
       gp.buttons = (1U << i);
       usb_hid.sendReport(0, &gp, sizeof(gp));
-      delay(1000);
-    }
+    }*/
 }
