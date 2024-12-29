@@ -16,7 +16,7 @@ uint8_t const desc_hid_report[] = {
 class USBComm
 {
     private:
-
+        void ResetButtons(void);
     public:
         void Init(void);
         void Cyclic(void);

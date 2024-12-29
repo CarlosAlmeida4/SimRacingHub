@@ -10,7 +10,6 @@
 #define USBCOMM_TIMER_ID 0
 
 TaskHandle_t USBCommTaskHandle;
-
 USBComm usbComm;
 
 void USBCommCyclicHandler(TimerHandle_t timer)
@@ -18,13 +17,10 @@ void USBCommCyclicHandler(TimerHandle_t timer)
   usbComm.Cyclic();
 }
 
-void setup() 
+void setup1() 
 {
   Serial.begin(115200);
-  UIHandlerInit();
-}
-void setup1()
-{
+
   usbComm.Init();
   TimerHandle_t USBCommTaskTimer = xTimerCreate("USB_COM_TIMER",pdMS_TO_TICKS(USBCOMM_TIMER_PERIOD_MS),pdTRUE,USBCOMM_TIMER_ID,USBCommCyclicHandler);
   if(USBCommTaskTimer != nullptr)
@@ -35,13 +31,28 @@ void setup1()
   {
     // TODO: Handle this case
   }
+  //vTaskStartScheduler();
 }
-
-void loop() {
-  UIHandlerCyclic();
-}
-
-void loop1()
+void setup()
 {
+  UIHandlerInit(); 
+}
 
+String a;
+
+
+void loop1() {
+  
+  if(Serial.available() > 0)
+  {
+    a = Serial.readString();
+    // say what you got:
+    Serial.print("I received: ");
+    Serial.println(a);
+  }
+}
+
+void loop()
+{
+  UIHandlerCyclic();
 }
