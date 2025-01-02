@@ -61,6 +61,5 @@ void UIHandlerCyclic(void)
     lv_timer_handler(); /* let the GUI do its work */
     _ui_label_set_property(uic_CurrentGear,_UI_LABEL_PROPERTY_TEXT,String(count).c_str());
     count++;
-    delay(1);
 }
 
