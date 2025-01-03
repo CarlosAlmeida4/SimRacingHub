@@ -38,9 +38,13 @@ void USBCommCyclicHandler(void *param)
   }
 }
 
-void UIHandlerCyclic(TimerHandle_t timer)
+void UIHandlerCyclicHandler(void *param)
 {
-
+  while(1)
+  {
+    UIHandlerCyclic();
+    delay(10);
+  }
 }
 
 void SerialCommHandler(void *param)
@@ -72,25 +76,27 @@ void setup1()
 {
   Serial.begin(115200);
   usbComm.Init();
-  TaskHandle_t USBCommTaskHandle;
+  UIHandlerInit();  
+  TaskHandle_t USBCommTaskHandle,UIHandlerCyclicHandle;
   //TimerHandle_t USBCommTaskTimer = xTimerCreate("USB_COM_TIMER",pdMS_TO_TICKS(USBCOMM_TIMER_PERIOD_MS),pdTRUE,USBCOMM_TIMER_ID,USBCommCyclicHandler);
-  xTaskCreate(USBCommCyclicHandler,"USBCOMMCYCLICHANDLER",1024,nullptr,1,&USBCommTaskHandle);
+  xTaskCreate(UIHandlerCyclicHandler,"UIHdlCy",1024,nullptr,5,&UIHandlerCyclicHandle);
   //xTaskCreate(SerialCommHandler,"SerialCommHandler",1024,nullptr,2,&SerialCommHandle);
   delay(1000);
-  //vTaskStartScheduler();
 }
 
 void setup() 
 {
-  UIHandlerInit();  
+  //UIHandlerInit();  
 }
 
 void loop1()
 {
+  //USBCommCyclicHandler(nullptr);
   ps();
+  delay(10);
 }
 
 void loop() 
 {
-  UIHandlerCyclic();  
+  //UIHandlerCyclic();  
 }
