@@ -47,12 +47,8 @@ void UIHandlerCyclicHandler(void *param)
   }
 }
 
-void SerialCommHandler(void *param)
+void SerialCommHandler()
 {
-  while(1)
-  {
-    (void) param;
-    TickType_t currentTime = pdTICKS_TO_MS(xTaskGetTickCount());
     String a;
     if(Serial.available() > 0)
     {
@@ -61,11 +57,6 @@ void SerialCommHandler(void *param)
       Serial.print("I received: ");
       Serial.println(a);
     }
-    Serial.print(" SerialCommHandler took: ");
-    Serial.println((pdTICKS_TO_MS(xTaskGetTickCount()) - currentTime));
-    delay(1000);
-    //
-  }
 }
 
 /*********************
@@ -80,6 +71,8 @@ void setup1()
   TaskHandle_t USBCommTaskHandle,UIHandlerCyclicHandle;
   //TimerHandle_t USBCommTaskTimer = xTimerCreate("USB_COM_TIMER",pdMS_TO_TICKS(USBCOMM_TIMER_PERIOD_MS),pdTRUE,USBCOMM_TIMER_ID,USBCommCyclicHandler);
   xTaskCreate(UIHandlerCyclicHandler,"UIHdlCy",1024,nullptr,5,&UIHandlerCyclicHandle);
+  xTaskCreate(USBCommCyclicHandler,"USBCOM",1024,nullptr,4,&USBCommTaskHandle);
+  
   //xTaskCreate(SerialCommHandler,"SerialCommHandler",1024,nullptr,2,&SerialCommHandle);
   delay(1000);
 }
@@ -93,10 +86,10 @@ void loop1()
 {
   //USBCommCyclicHandler(nullptr);
   ps();
-  delay(10);
+  delay(1000);
 }
 
 void loop() 
 {
-  //UIHandlerCyclic();  
+  SerialCommHandler();
 }
