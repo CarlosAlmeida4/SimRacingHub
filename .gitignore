@@ -5,3 +5,7 @@
 .vscode/ipch
 
 .vscode/
+
+src/maincpp
+
+output.map
