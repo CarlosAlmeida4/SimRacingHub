@@ -6,6 +6,5 @@
 src/.local
 .vscode/
 
-src/maincpp
 
 output.map
