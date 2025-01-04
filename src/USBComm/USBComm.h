@@ -17,6 +17,8 @@ class USBComm
 {
     private:
         void ResetButtons(void);
+        static uint16_t get_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen);
+        static void set_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize); 
     public:
         void Init(void);
         void Cyclic(void);
@@ -24,8 +26,7 @@ class USBComm
         // HID report descriptor using TinyUSB's template
         // Single Report (no ID) descriptor
         
-        // USB HID object
-        Adafruit_USBD_HID usb_hid;
+
         // Report payload defined in src/class/hid/hid.h
         // - For Gamepad Button Bit Mask see  hid_gamepad_button_bm_t
         // - For Gamepad Hat    Bit Mask see  hid_gamepad_hat_t
