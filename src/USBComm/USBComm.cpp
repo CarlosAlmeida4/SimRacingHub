@@ -45,22 +45,11 @@ void USBComm::Cyclic()
 
     if (!usb_hid.ready()) return;
 
-    // Reset buttons
-    Serial.println("No pressing buttons");
-    gp.x = 0;
-    gp.y = 0;
-    gp.z = 0;
-    gp.rz = 0;
-    gp.rx = 0;
-    gp.ry = 0;
-    gp.hat = 0;
-    gp.buttons = 0;
-    usb_hid.sendReport(0, &gp, sizeof(gp));
-    delay(100);
+    //ResetButtons(); //TODO check if need to reset the buttons
     // Test buttons (up to 32 buttons)
     static int aux = 0;
-    Serial.print("Pressing button ");
-    Serial.println(aux);
+    //Serial.print("Pressing button ");
+    //Serial.println(aux);
     gp.buttons = (1U << aux);
     usb_hid.sendReport(0, &gp, sizeof(gp));
     aux++;
@@ -71,4 +60,20 @@ void USBComm::Cyclic()
       gp.buttons = (1U << i);
       usb_hid.sendReport(0, &gp, sizeof(gp));
     }*/
+}
+
+
+void USBComm::ResetButtons(void)
+{ 
+  // Reset buttons
+    //Serial.println("No pressing buttons");
+    gp.x = 0;
+    gp.y = 0;
+    gp.z = 0;
+    gp.rz = 0;
+    gp.rx = 0;
+    gp.ry = 0;
+    gp.hat = 0;
+    gp.buttons = 0;
+    usb_hid.sendReport(0, &gp, sizeof(gp));
 }
