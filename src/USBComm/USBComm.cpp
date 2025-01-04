@@ -3,13 +3,20 @@
 #include <Adafruit_TinyUSB.h>
 #include <string.h>
 
+hid_gamepad_report_t gp;
+// HID report descriptor using TinyUSB's template
+// Single Report (no ID) descriptor
+uint8_t const desc_hid_report[] = {
+    TUD_HID_REPORT_DESC_GENERIC_INOUT(64)
+};
 // USB HID object
-static Adafruit_USBD_HID usb_hid;
+Adafruit_USBD_HID usb_hid(desc_hid_report, sizeof(desc_hid_report), HID_ITF_PROTOCOL_NONE, 2, true);
+
 
 // Invoked when received GET_REPORT control request
 // Application must fill buffer report's content and return its length.
 // Return zero will cause the stack to STALL request
-uint16_t USBComm::get_report_callback (uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen)
+uint16_t USBCommGet_report_callback (uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen)
 {
   // not used in this example
   (void) report_id;
@@ -21,7 +28,7 @@ uint16_t USBComm::get_report_callback (uint8_t report_id, hid_report_type_t repo
 
 // Invoked when received SET_REPORT control request or
 // received data on OUT endpoint ( Report ID = 0, Type = 0 )
-void USBComm::set_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
+void USBCommSet_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
 {
   // This example doesn't use multiple report and report ID
   (void) report_id;
@@ -31,7 +38,7 @@ void USBComm::set_report_callback(uint8_t report_id, hid_report_type_t report_ty
   usb_hid.sendReport(0, buffer, bufsize);
 }
 
-void USBComm::Init()
+void USBCommInit()
 {
     // Manual begin() is required on core without built-in support e.g. mbed rp2040
     if (!TinyUSBDevice.isInitialized()) {
@@ -40,7 +47,7 @@ void USBComm::Init()
     // Setup HID
     usb_hid.setPollInterval(2);
     usb_hid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
-    usb_hid.setReportCallback(get_report_callback,set_report_callback);
+    usb_hid.setReportCallback(USBCommGet_report_callback,USBCommSet_report_callback);
     usb_hid.begin();    
     // If already enumerated, additional class driverr begin() e.g msc, hid, midi won't take effect until re-enumeration
     if (TinyUSBDevice.mounted()) {
@@ -51,8 +58,8 @@ void USBComm::Init()
 
 }
 
-void USBComm::Cyclic()
-{/*
+void USBCommCyclic()
+{
     #ifdef TINYUSB_NEED_POLLING_TASK
     // Manual call tud_task since it isn't called by Core's background
     TinyUSBDevice.task();
@@ -91,7 +98,7 @@ void USBComm::Cyclic()
 }
 
 
-void USBComm::ResetButtons(void)
+void USBCommResetButtons(void)
 { 
   // Reset buttons
     //Serial.println("No pressing buttons");
