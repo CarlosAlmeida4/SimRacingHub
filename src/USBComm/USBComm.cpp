@@ -3,11 +3,19 @@
 #include <Adafruit_TinyUSB.h>
 #include <string.h>
 
+// Report ID
+enum
+{
+  RID_GAMEPAD = 1,
+  RID_GENERIC,
+};
+
 hid_gamepad_report_t gp;
 // HID report descriptor using TinyUSB's template
 // Single Report (no ID) descriptor
 uint8_t const desc_hid_report[] = {
-    TUD_HID_REPORT_DESC_GENERIC_INOUT(64)
+  TUD_HID_REPORT_DESC_GAMEPAD(HID_REPORT_ID(RID_GAMEPAD)),
+  TUD_HID_REPORT_DESC_GENERIC_INOUT(64,HID_REPORT_ID(RID_GENERIC))  
 };
 // USB HID object
 Adafruit_USBD_HID usb_hid(desc_hid_report, sizeof(desc_hid_report), HID_ITF_PROTOCOL_NONE, 2, true);
@@ -33,9 +41,10 @@ void USBCommSet_report_callback(uint8_t report_id, hid_report_type_t report_type
   // This example doesn't use multiple report and report ID
   (void) report_id;
   (void) report_type;
-
+  Serial.print("Called Set Report Callback: ");
+  Serial.println(report_id);
   // echo back anything we received from host
-  usb_hid.sendReport(0, buffer, bufsize);
+  usb_hid.sendReport(RID_GENERIC, buffer, bufsize);
 }
 
 void USBCommInit()
@@ -86,7 +95,7 @@ void USBCommCyclic()
     //Serial.print("Pressing button ");
     //Serial.println(aux);
     gp.buttons = (1U << aux);
-    usb_hid.sendReport(0, &gp, sizeof(gp));
+    usb_hid.sendReport(RID_GAMEPAD, &gp, sizeof(gp));
     aux++;
     if(aux>32) aux=0;
     /*for (int i = 0; i < 32; ++i) {
@@ -110,5 +119,5 @@ void USBCommResetButtons(void)
     gp.ry = 0;
     gp.hat = 0;
     gp.buttons = 0;
-    usb_hid.sendReport(0, &gp, sizeof(gp));
+    usb_hid.sendReport(RID_GAMEPAD, &gp, sizeof(gp));
 }
