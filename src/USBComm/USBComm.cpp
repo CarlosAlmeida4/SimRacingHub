@@ -69,11 +69,13 @@ void USBCommInit()
 
 void USBCommCyclic()
 {
+    int incomingByte = 0; // for incoming serial data
+
     #ifdef TINYUSB_NEED_POLLING_TASK
     // Manual call tud_task since it isn't called by Core's background
     TinyUSBDevice.task();
     #endif
-
+    
     // not enumerated()/mounted() yet: nothing to do
     if (!TinyUSBDevice.mounted()) {
       return;
@@ -104,6 +106,15 @@ void USBCommCyclic()
       gp.buttons = (1U << i);
       usb_hid.sendReport(0, &gp, sizeof(gp));
     }*/
+    // send data only when you receive data:
+    if (Serial.available() > 0) {
+      // read the incoming byte:
+      incomingByte = Serial.read();
+
+      // say what you got:
+      Serial.print("I received: ");
+      Serial.println(incomingByte, DEC);
+    }
 }
 
 
