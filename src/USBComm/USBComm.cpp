@@ -105,27 +105,19 @@ void USBCommCyclic()
 
     //ResetButtons(); //TODO check if need to reset the buttons
     // Test buttons (up to 32 buttons)
-    static int aux = 0;
+    static int aux = 1;
     //Serial.print("Pressing button ");
     //Serial.println(aux);
     gp.buttons = (1U << aux);
     usb_hid_gamepad.sendReport(0, &gp, sizeof(gp));
-    aux++;
-    if(aux>32) aux=0;
-    /*for (int i = 0; i < 32; ++i) {
-      Serial.print("Pressing button ");
-      Serial.println(i);
-      gp.buttons = (1U << i);
-      usb_hid.sendReport(0, &gp, sizeof(gp));
-    }*/
-    // send data only when you receive data:
-    if (Serial.available() > 0) {
-      // read the incoming byte:
-      incomingByte = Serial.read();
-
-      // say what you got:
-      Serial.print("I received: ");
-      Serial.println(incomingByte, DEC);
+    if(BOOTSEL)
+    {
+      if(aux == 2 || aux == 0) aux = 1;
+      else if(aux == 1) aux = 2;
+    }
+    else
+    {
+      aux = 0;
     }
 }
 
