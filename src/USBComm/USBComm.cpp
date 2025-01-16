@@ -3,23 +3,30 @@
 #include <Adafruit_TinyUSB.h>
 #include <string.h>
 
+#if CFG_TUD_HID < 2
+  #error "Requires two HID instances support. See https://github.com/adafruit/Adafruit_TinyUSB_Arduino/commit/b75604f794acdf88daad310dd75d3a0724129056"
+#endif 
+
 // Report ID
 enum
 {
-  RID_GAMEPAD = 1,
+  RID_GAMEPAD = 0,
   RID_GENERIC,
 };
 
 hid_gamepad_report_t gp;
 // HID report descriptor using TinyUSB's template
 // Single Report (no ID) descriptor
-uint8_t const desc_hid_report[] = {
-  TUD_HID_REPORT_DESC_GAMEPAD(HID_REPORT_ID(RID_GAMEPAD)),
-  TUD_HID_REPORT_DESC_GENERIC_INOUT(64,HID_REPORT_ID(RID_GENERIC))  
+uint8_t const desc_hid_report_gamepad[] = {
+  TUD_HID_REPORT_DESC_GAMEPAD()
 };
-// USB HID object
-Adafruit_USBD_HID usb_hid(desc_hid_report, sizeof(desc_hid_report), HID_ITF_PROTOCOL_NONE, 2, true);
+uint8_t const desc_hid_report_inout[] = {
+  TUD_HID_REPORT_DESC_GENERIC_INOUT(64)
+};
 
+// USB HID object
+Adafruit_USBD_HID usb_hid_gamepad(desc_hid_report_gamepad, sizeof(desc_hid_report_gamepad), HID_ITF_PROTOCOL_NONE, 2, true);
+Adafruit_USBD_HID usb_hid_inout(desc_hid_report_inout, sizeof(desc_hid_report_inout), HID_ITF_PROTOCOL_NONE, 2, true);
 
 // Invoked when received GET_REPORT control request
 // Application must fill buffer report's content and return its length.
@@ -44,7 +51,7 @@ void USBCommSet_report_callback(uint8_t report_id, hid_report_type_t report_type
   Serial.print("Called Set Report Callback: ");
   Serial.println(report_id);
   // echo back anything we received from host
-  usb_hid.sendReport(RID_GENERIC, buffer, bufsize);
+  usb_hid_inout.sendReport(0, buffer, bufsize);
 }
 
 void USBCommInit()
@@ -54,10 +61,15 @@ void USBCommInit()
       TinyUSBDevice.begin(0);
     }   
     // Setup HID
-    usb_hid.setPollInterval(2);
-    usb_hid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
-    usb_hid.setReportCallback(USBCommGet_report_callback,USBCommSet_report_callback);
-    usb_hid.begin();    
+    usb_hid_inout.enableOutEndpoint(true);
+    usb_hid_inout.setPollInterval(2);
+    usb_hid_inout.setReportDescriptor(desc_hid_report_inout, sizeof(desc_hid_report_inout));
+    usb_hid_inout.setReportCallback(USBCommGet_report_callback,USBCommSet_report_callback);
+    usb_hid_inout.begin(); 
+
+    usb_hid_gamepad.setPollInterval(2);
+    usb_hid_gamepad.setReportDescriptor(desc_hid_report_gamepad, sizeof(desc_hid_report_gamepad));   
+    usb_hid_gamepad.begin(); 
     // If already enumerated, additional class driverr begin() e.g msc, hid, midi won't take effect until re-enumeration
     if (TinyUSBDevice.mounted()) {
       TinyUSBDevice.detach();
@@ -89,7 +101,7 @@ void USBCommCyclic()
 //      TinyUSBDevice.remoteWakeup();
 //    }
 
-    if (!usb_hid.ready()) return;
+    if (!usb_hid_gamepad.ready() || !usb_hid_inout.ready()) return;
 
     //ResetButtons(); //TODO check if need to reset the buttons
     // Test buttons (up to 32 buttons)
@@ -97,7 +109,7 @@ void USBCommCyclic()
     //Serial.print("Pressing button ");
     //Serial.println(aux);
     gp.buttons = (1U << aux);
-    usb_hid.sendReport(RID_GAMEPAD, &gp, sizeof(gp));
+    usb_hid_gamepad.sendReport(0, &gp, sizeof(gp));
     aux++;
     if(aux>32) aux=0;
     /*for (int i = 0; i < 32; ++i) {
@@ -130,5 +142,5 @@ void USBCommResetButtons(void)
     gp.ry = 0;
     gp.hat = 0;
     gp.buttons = 0;
-    usb_hid.sendReport(RID_GAMEPAD, &gp, sizeof(gp));
+    usb_hid_gamepad.sendReport(0, &gp, sizeof(gp));
 }
