@@ -3,9 +3,8 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-
+src/.local
 .vscode/
 
-src/maincpp
 
 output.map
