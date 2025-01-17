@@ -37,7 +37,7 @@ void setup1()
 {
   //usbComm.Init();
   UIHandlerInit();
-  main_IOinput.InitInputs();  
+  main_IOinput.InitInputs();
   delay(1000);
 }
 
@@ -45,6 +45,7 @@ void setup()
 {
   //UIHandlerInit();  
   USBCommInit();
+    
   Serial.begin(115200);
 }
 
@@ -58,5 +59,6 @@ void loop1()
 void loop() 
 {
   USBCommCyclic();
+  
   delay(100);
 }
