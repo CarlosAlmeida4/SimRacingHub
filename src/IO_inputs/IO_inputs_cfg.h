@@ -1,0 +1,7 @@
+#ifndef IO_INPUT_CFG_H
+#define IO_INPUT_CFG_H
+
+#define SHIFTUPREQUEST_PIN 1
+#define SHIFTDOWNREQUEST_PIN 0
+
+#endif

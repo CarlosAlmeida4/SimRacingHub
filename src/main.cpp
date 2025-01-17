@@ -2,8 +2,9 @@
 #include "Arduino.h"
 #include "UIHandler\UIHandler.h"
 #include "USBComm\USBComm.h"
+#include "IO_inputs\IO_inputs.h"
 
-
+IOinput main_IOinput;
 
 /*********************
 *       TASKS        *
@@ -35,7 +36,8 @@ void UIHandlerCyclicHandler(void *param)
 void setup1()
 {
   //usbComm.Init();
-  UIHandlerInit();  
+  UIHandlerInit();
+  main_IOinput.InitInputs();
   delay(1000);
 }
 
@@ -43,6 +45,7 @@ void setup()
 {
   //UIHandlerInit();  
   USBCommInit();
+    
   Serial.begin(115200);
 }
 
@@ -50,11 +53,12 @@ void loop1()
 {
   //USBCommCyclicHandler(nullptr);
   UIHandlerCyclic();
-  
+  main_IOinput.FastCyclic();
 }
 
 void loop() 
 {
   USBCommCyclic();
+  
   delay(100);
 }
