@@ -20,8 +20,8 @@ void IOinput::FastCyclic()
 {
     IOInputs_ShiftUpRequest.ShiftUpRequest = !digitalRead(IOInputs_ShiftUpRequest.ShiftUpRequestPin);
     IOInputs_ShiftDownRequest.ShiftDownRequest = !digitalRead(IOInputs_ShiftDownRequest.ShiftDownRequestPin);
-    Serial.print("Shit Up Request : ");
-    Serial.println(IOInputs_ShiftUpRequest.ShiftUpRequest);
-    Serial.print("Shit Down Request : ");
-    Serial.println(IOInputs_ShiftDownRequest.ShiftDownRequest);
+    //Serial.print("Shit Up Request : ");
+    //Serial.println(IOInputs_ShiftUpRequest.ShiftUpRequest);
+    //Serial.print("Shit Down Request : ");
+    //Serial.println(IOInputs_ShiftDownRequest.ShiftDownRequest);
 }
