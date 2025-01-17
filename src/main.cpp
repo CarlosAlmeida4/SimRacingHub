@@ -2,8 +2,9 @@
 #include "Arduino.h"
 #include "UIHandler\UIHandler.h"
 #include "USBComm\USBComm.h"
+#include "ShifterLogic\ShiftingLogic.h"  
 
-
+static ShiftingLogic ShiftingLogic_Obj;
 
 /*********************
 *       TASKS        *
@@ -36,6 +37,7 @@ void setup1()
 {
   //usbComm.Init();
   UIHandlerInit();  
+  ShiftingLogic_Obj.initialize();
   delay(1000);
 }
 
@@ -50,6 +52,7 @@ void loop1()
 {
   //USBCommCyclicHandler(nullptr);
   UIHandlerCyclic();
+  
   
 }
 
