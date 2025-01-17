@@ -2,8 +2,10 @@
 #include "Arduino.h"
 #include "UIHandler\UIHandler.h"
 #include "USBComm\USBComm.h"
+#include "IO_inputs\IO_inputs.h"
 #include "ShifterLogic\ShiftingLogic.h"  
 
+IOinput main_IOinput;
 static ShiftingLogic ShiftingLogic_Obj;
 
 /*********************
@@ -36,7 +38,8 @@ void UIHandlerCyclicHandler(void *param)
 void setup1()
 {
   //usbComm.Init();
-  UIHandlerInit();  
+  main_IOinput.InitInputs();
+  UIHandlerInit();
   ShiftingLogic_Obj.initialize();
   delay(1000);
 }
@@ -45,6 +48,7 @@ void setup()
 {
   //UIHandlerInit();  
   USBCommInit();
+    
   Serial.begin(115200);
 }
 
@@ -52,12 +56,12 @@ void loop1()
 {
   //USBCommCyclicHandler(nullptr);
   UIHandlerCyclic();
-  
-  
+  main_IOinput.FastCyclic();
 }
 
 void loop() 
 {
   USBCommCyclic();
+  
   delay(100);
 }
