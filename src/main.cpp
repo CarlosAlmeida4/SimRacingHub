@@ -5,31 +5,8 @@
 #include "IO_inputs\IO_inputs.h"
 #include "ShifterLogic\ShiftingLogic.h"  
 
-IOinput main_IOinput;
+IOinput IOinput_Obj;
 static ShiftingLogic ShiftingLogic_Obj;
-
-/*********************
-*       TASKS        *
-**********************/
-
-void USBCommCyclicHandler(void *param)
-{
-  while(1)
-  {
-    (void) param;
-    //usbComm.Cyclic();
-    delay(100);
-  }
-}
-
-void UIHandlerCyclicHandler(void *param)
-{
-  while(1)
-  {
-    UIHandlerCyclic();
-    delay(10);
-  }
-}
 
 /*********************
 *        MAIN        *
@@ -38,8 +15,8 @@ void UIHandlerCyclicHandler(void *param)
 void setup1()
 {
   //usbComm.Init();
-  main_IOinput.InitInputs();
   UIHandlerInit();
+  IOinput_Obj.InitInputs();
   ShiftingLogic_Obj.initialize();
   delay(1000);
 }
@@ -48,7 +25,6 @@ void setup()
 {
   //UIHandlerInit();  
   USBCommInit();
-    
   Serial.begin(115200);
 }
 
@@ -56,7 +32,7 @@ void loop1()
 {
   //USBCommCyclicHandler(nullptr);
   UIHandlerCyclic();
-  main_IOinput.FastCyclic();
+  IOinput_Obj.FastCyclic();
 }
 
 void loop() 
