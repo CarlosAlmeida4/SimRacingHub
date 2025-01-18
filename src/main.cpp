@@ -3,31 +3,19 @@
 #include "UIHandler\UIHandler.h"
 #include "USBComm\USBComm.h"
 #include "IO_inputs\IO_inputs.h"
-
-IOinput main_IOinput;
+#include "ShifterLogic\ShiftingLogic.h"  
+#include "SharedDatatype.h" //TODO Evaluate if implementing a Mediator class is helpful
 
 /*********************
-*       TASKS        *
+*Object Instantiation*
 **********************/
+IOinput IOinput_Obj;
+ShiftingLogic ShiftingLogic_Obj;
 
-void USBCommCyclicHandler(void *param)
-{
-  while(1)
-  {
-    (void) param;
-    //usbComm.Cyclic();
-    delay(100);
-  }
-}
-
-void UIHandlerCyclicHandler(void *param)
-{
-  while(1)
-  {
-    UIHandlerCyclic();
-    delay(10);
-  }
-}
+/*********************
+*     Shared Data    *
+**********************/
+SharedData_t SharedData;
 
 /*********************
 *        MAIN        *
@@ -37,7 +25,8 @@ void setup1()
 {
   //usbComm.Init();
   UIHandlerInit();
-  main_IOinput.InitInputs();
+  IOinput_Obj.InitInputs();
+  ShiftingLogic_Obj.initialize();
   delay(1000);
 }
 
@@ -45,7 +34,6 @@ void setup()
 {
   //UIHandlerInit();  
   USBCommInit();
-    
   Serial.begin(115200);
 }
 
@@ -53,12 +41,13 @@ void loop1()
 {
   //USBCommCyclicHandler(nullptr);
   UIHandlerCyclic();
-  main_IOinput.FastCyclic();
+  IOinput_Obj.FastCyclic(&SharedData);
+  ShiftingLogic_Obj.step(&SharedData);
 }
 
 void loop() 
 {
   USBCommCyclic();
   
-  delay(100);
+  //delay(100);
 }
