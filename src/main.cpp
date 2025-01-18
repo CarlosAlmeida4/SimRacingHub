@@ -4,9 +4,18 @@
 #include "USBComm\USBComm.h"
 #include "IO_inputs\IO_inputs.h"
 #include "ShifterLogic\ShiftingLogic.h"  
+#include "SharedDatatype.h" //TODO Evaluate if implementing a Mediator class is helpful
 
+/*********************
+*Object Instantiation*
+**********************/
 IOinput IOinput_Obj;
 ShiftingLogic ShiftingLogic_Obj;
+
+/*********************
+*     Shared Data    *
+**********************/
+SharedData_t SharedData;
 
 /*********************
 *        MAIN        *
@@ -32,7 +41,7 @@ void loop1()
 {
   //USBCommCyclicHandler(nullptr);
   UIHandlerCyclic();
-  IOinput_Obj.FastCyclic();
+  IOinput_Obj.FastCyclic(&SharedData);
   //ShiftingLogic_Obj.step();
 }
 

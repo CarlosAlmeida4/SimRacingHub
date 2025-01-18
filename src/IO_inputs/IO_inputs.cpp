@@ -16,10 +16,12 @@ void IOinput::InitInputs()
     IOInputs_ShiftDownRequest.ShiftDownRequest = 0;
 }
 
-void IOinput::FastCyclic()
+void IOinput::FastCyclic(SharedData_t *SharedData)
 {
     IOInputs_ShiftUpRequest.ShiftUpRequest = !digitalRead(IOInputs_ShiftUpRequest.ShiftUpRequestPin);
     IOInputs_ShiftDownRequest.ShiftDownRequest = !digitalRead(IOInputs_ShiftDownRequest.ShiftDownRequestPin);
+    SharedData->ShiftDownRequest = IOInputs_ShiftDownRequest.ShiftDownRequest;
+    SharedData->ShiftUpRequest = IOInputs_ShiftUpRequest.ShiftUpRequest;
     //Serial.print("Shit Up Request : ");
     //Serial.println(IOInputs_ShiftUpRequest.ShiftUpRequest);
     //Serial.print("Shit Down Request : ");

@@ -2,6 +2,7 @@
 #define SHIFTING_LOGIC_H
 
 #include "Arduino.h"
+#include "SharedDatatype.h"
 
 // Class declaration for model ShiftingLogic
 class ShiftingLogic final

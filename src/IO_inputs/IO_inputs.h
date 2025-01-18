@@ -3,13 +3,13 @@
 
 #include "Arduino.h"
 #include "IO_inputs_cfg.h"
-
+#include "SharedDatatype.h"
 
 class IOinput
 {
     public:
         void InitInputs(void);
-        void FastCyclic(void);
+        void FastCyclic(SharedData_t *SharedData);
 
         struct IOInputs_ShiftUpRequest_type
         {
