@@ -6,7 +6,7 @@
 #include "ShifterLogic\ShiftingLogic.h"  
 
 IOinput IOinput_Obj;
-static ShiftingLogic ShiftingLogic_Obj;
+ShiftingLogic ShiftingLogic_Obj;
 
 /*********************
 *        MAIN        *
@@ -17,7 +17,7 @@ void setup1()
   //usbComm.Init();
   UIHandlerInit();
   IOinput_Obj.InitInputs();
-  ShiftingLogic_Obj.initialize();
+  //ShiftingLogic_Obj.initialize();
   delay(1000);
 }
 
@@ -33,6 +33,7 @@ void loop1()
   //USBCommCyclicHandler(nullptr);
   UIHandlerCyclic();
   IOinput_Obj.FastCyclic();
+  //ShiftingLogic_Obj.step();
 }
 
 void loop() 
