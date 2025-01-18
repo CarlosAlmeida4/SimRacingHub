@@ -14,7 +14,7 @@ class ShiftingLogic final
   void initialize();
 
   // model step function
-  void step();
+  void step(SharedData_t *SharedData);
 
 };
 
