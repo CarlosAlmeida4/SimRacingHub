@@ -26,7 +26,7 @@ void setup1()
   //usbComm.Init();
   UIHandlerInit();
   IOinput_Obj.InitInputs();
-  //ShiftingLogic_Obj.initialize();
+  ShiftingLogic_Obj.initialize();
   delay(1000);
 }
 
@@ -42,12 +42,12 @@ void loop1()
   //USBCommCyclicHandler(nullptr);
   UIHandlerCyclic();
   IOinput_Obj.FastCyclic(&SharedData);
-  //ShiftingLogic_Obj.step();
+  ShiftingLogic_Obj.step(&SharedData);
 }
 
 void loop() 
 {
   USBCommCyclic();
   
-  delay(100);
+  //delay(100);
 }

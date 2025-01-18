@@ -136,3 +136,15 @@ void USBCommResetButtons(void)
     gp.buttons = 0;
     usb_hid_gamepad.sendReport(0, &gp, sizeof(gp));
 }
+
+void USBCommSetButtonReport(uint32_t button)
+{
+    gp.buttons = (1U << button);
+    usb_hid_gamepad.sendReport(0, &gp, sizeof(gp));
+}
+
+void USBCommResetButtonReport(uint32_t button)
+{
+    gp.buttons = (0U << button);
+    usb_hid_gamepad.sendReport(0, &gp, sizeof(gp));
+}

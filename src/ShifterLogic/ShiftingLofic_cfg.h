@@ -1,0 +1,7 @@
+#ifndef SHIFTING_LOGIC_CFG_H
+#define SHIFTING_LOGIC_CFG_H
+
+#define SHIFTUP_GAMEPAD 1
+#define SHIFTDOWN_GAMEPAD 2
+
+#endif

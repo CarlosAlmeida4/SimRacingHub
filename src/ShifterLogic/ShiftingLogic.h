@@ -3,6 +3,8 @@
 
 #include "Arduino.h"
 #include "SharedDatatype.h"
+#include "ShiftingLofic_cfg.h"
+#include "USBComm\USBComm.h"
 
 // Class declaration for model ShiftingLogic
 class ShiftingLogic final
