@@ -40,14 +40,14 @@ void setup()
 void loop1()
 {
   //USBCommCyclicHandler(nullptr);
-  UIHandlerCyclic();
+  UIHandlerCyclic(&SharedData);
   IOinput_Obj.FastCyclic(&SharedData);
   ShiftingLogic_Obj.step(&SharedData);
 }
 
 void loop() 
 {
-  USBCommCyclic();
+  USBCommCyclic(&SharedData);
   
   //delay(100);
 }
