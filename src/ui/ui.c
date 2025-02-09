@@ -13,7 +13,6 @@
 void ui_GearScreen_screen_init(void);
 lv_obj_t * ui_GearScreen;
 lv_obj_t * ui_CurrentGear;
-lv_obj_t * ui_Spinner2;
 // CUSTOM VARIABLES
 lv_obj_t * uic_GearScreen;
 lv_obj_t * uic_CurrentGear;

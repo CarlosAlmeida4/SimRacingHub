@@ -1,0 +1,16 @@
+{
+  "codename": "EmblemaOne",
+  "ttf_path": "/assets/Emblema_One/EmblemaOne-Regular.ttf",
+  "bin_path": "/assets/Emblema_One\\ui_font_EmblemaOne.bin",
+  "c_path": "/assets/Emblema_One\\ui_font_EmblemaOne.c",
+  "cfg_path": "/assets/Emblema_One\\ui_font_EmblemaOne.fcfg",
+  "size": 200,
+  "bpp": 8,
+  "letters": 0,
+  "ranges": [
+    "0x20-0x7f"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}
