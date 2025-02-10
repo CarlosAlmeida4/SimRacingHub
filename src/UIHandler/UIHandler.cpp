@@ -60,7 +60,19 @@ void UIHandlerCyclic(SharedData_t *SharedData)
     uint8_t gear = SharedData->CurrentGear;
     Serial.print("The curent gear is: ");
     Serial.println(SharedData->CurrentGear);
+    if(10 == gear)
+    {
+        _ui_label_set_property(uic_CurrentGear,_UI_LABEL_PROPERTY_TEXT,"R");
+    }
+    else if(0 == gear)
+    {
+        _ui_label_set_property(uic_CurrentGear,_UI_LABEL_PROPERTY_TEXT,"N");    
+    }
+    else 
+    {
+        _ui_label_set_property(uic_CurrentGear,_UI_LABEL_PROPERTY_TEXT,String(gear).c_str());    
+    }
     lv_timer_handler(); /* let the GUI do its work */
-    _ui_label_set_property(uic_CurrentGear,_UI_LABEL_PROPERTY_TEXT,String(gear).c_str());
+    
 }
 
