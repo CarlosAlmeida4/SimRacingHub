@@ -7,6 +7,7 @@
 #include <lv_demo.h>
 #include <lvgl.h>
 #include <string.h>
+#include "SharedDatatype.h"
 
 
 /*Change to your screen resolution*/
@@ -18,7 +19,7 @@ static LGFX_GC9A01 gfx;
 
 
 void UIHandlerInit(void);
-void UIHandlerCyclic(void);
+void UIHandlerCyclic(SharedData_t *SharedData);
 static void my_disp_flush(lv_disp_drv_t*, const lv_area_t*, lv_color_t*);
 static void my_touchpad_read(lv_indev_drv_t*, lv_indev_data_t*);
 

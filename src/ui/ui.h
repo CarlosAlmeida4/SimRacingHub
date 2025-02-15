@@ -20,7 +20,6 @@ extern "C" {
 void ui_GearScreen_screen_init(void);
 extern lv_obj_t * ui_GearScreen;
 extern lv_obj_t * ui_CurrentGear;
-extern lv_obj_t * ui_Spinner2;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_GearScreen;
 extern lv_obj_t * uic_CurrentGear;
@@ -28,6 +27,9 @@ extern lv_obj_t * uic_CurrentGear;
 // EVENTS
 
 extern lv_obj_t * ui____initial_actions0;
+
+// FONTS
+LV_FONT_DECLARE(ui_font_EmblemaOne);
 
 // UI INIT
 void ui_init(void);

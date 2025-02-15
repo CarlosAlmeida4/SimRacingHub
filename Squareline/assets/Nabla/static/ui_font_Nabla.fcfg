@@ -1,0 +1,16 @@
+{
+  "codename": "Nabla",
+  "ttf_path": "/assets/Nabla/static/Nabla-Regular.ttf",
+  "bin_path": "/assets/Nabla/static\\ui_font_Nabla.bin",
+  "c_path": "/assets/Nabla/static\\ui_font_Nabla.c",
+  "cfg_path": "/assets/Nabla/static\\ui_font_Nabla.fcfg",
+  "size": 100,
+  "bpp": 8,
+  "letters": 0,
+  "ranges": [
+    "0x20-0x7f"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}

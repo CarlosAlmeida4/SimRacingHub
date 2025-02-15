@@ -11,19 +11,23 @@ void ui_GearScreen_screen_init(void)
     lv_obj_clear_flag(ui_GearScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_CurrentGear = lv_label_create(ui_GearScreen);
-    lv_obj_set_width(ui_CurrentGear, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_CurrentGear, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_CurrentGear, 0);
-    lv_obj_set_y(ui_CurrentGear, 2);
+    lv_obj_set_width(ui_CurrentGear, lv_pct(70));
+    lv_obj_set_height(ui_CurrentGear, lv_pct(85));
+    lv_obj_set_x(ui_CurrentGear, -1);
+    lv_obj_set_y(ui_CurrentGear, 1);
     lv_obj_set_align(ui_CurrentGear, LV_ALIGN_CENTER);
-
-    ui_Spinner2 = lv_spinner_create(ui_GearScreen, 1000, 90);
-    lv_obj_set_width(ui_Spinner2, 240);
-    lv_obj_set_height(ui_Spinner2, 240);
-    lv_obj_set_x(ui_Spinner2, 0);
-    lv_obj_set_y(ui_Spinner2, -1);
-    lv_obj_set_align(ui_Spinner2, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_Spinner2, LV_OBJ_FLAG_CLICKABLE);      /// Flags
+    lv_label_set_text(ui_CurrentGear, "1");
+    lv_obj_clear_flag(ui_CurrentGear, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
+                      LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+                      LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
+    lv_obj_set_style_text_color(ui_CurrentGear, lv_color_hex(0xD71818), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_CurrentGear, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_letter_space(ui_CurrentGear, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_line_space(ui_CurrentGear, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui_CurrentGear, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_decor(ui_CurrentGear, LV_TEXT_DECOR_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_CurrentGear, &ui_font_EmblemaOne, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_side(ui_CurrentGear, LV_BORDER_SIDE_FULL, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     uic_GearScreen = ui_GearScreen;
     uic_CurrentGear = ui_CurrentGear;

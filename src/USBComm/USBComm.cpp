@@ -7,6 +7,8 @@
   #error "Requires two HID instances support. See https://github.com/adafruit/Adafruit_TinyUSB_Arduino/commit/b75604f794acdf88daad310dd75d3a0724129056"
 #endif 
 
+#define MAX_PACKET_SIZE 64 //The packet is always 64 bytes
+
 // Report ID
 enum
 {
@@ -28,6 +30,9 @@ uint8_t const desc_hid_report_inout[] = {
 Adafruit_USBD_HID usb_hid_gamepad(desc_hid_report_gamepad, sizeof(desc_hid_report_gamepad), HID_ITF_PROTOCOL_NONE, 2, true);
 Adafruit_USBD_HID usb_hid_inout(desc_hid_report_inout, sizeof(desc_hid_report_inout), HID_ITF_PROTOCOL_NONE, 2, true);
 
+// Buffer to receive a packet
+uint8_t ReceivedPacket[MAX_PACKET_SIZE];
+
 // Invoked when received GET_REPORT control request
 // Application must fill buffer report's content and return its length.
 // Return zero will cause the stack to STALL request
@@ -48,8 +53,12 @@ void USBCommSet_report_callback(uint8_t report_id, hid_report_type_t report_type
   // This example doesn't use multiple report and report ID
   (void) report_id;
   (void) report_type;
-  Serial.print("Called Set Report Callback: ");
-  Serial.println(report_id);
+  //Serial.print("Called Set Report Callback: ");
+  //Serial.println(report_id);
+  if(bufsize <= MAX_PACKET_SIZE)
+  {
+    memcpy(ReceivedPacket,buffer,MAX_PACKET_SIZE);
+  }
   // echo back anything we received from host
   usb_hid_inout.sendReport(0, buffer, bufsize);
 }
@@ -79,7 +88,7 @@ void USBCommInit()
 
 }
 
-void USBCommCyclic()
+void USBCommCyclic(SharedData_t *SharedData)
 {
     int incomingByte = 0; // for incoming serial data
 
@@ -110,17 +119,26 @@ void USBCommCyclic()
     //Serial.println(aux);
     gp.buttons = (1U << aux);
     usb_hid_gamepad.sendReport(0, &gp, sizeof(gp));
-    if(BOOTSEL)
-    {
-      if(aux == 2 || aux == 0) aux = 1;
-      else if(aux == 1) aux = 2;
-    }
-    else
-    {
-      aux = 0;
-    }
+
+    USBCommHandleReceivedPacket(SharedData);
 }
 
+void USBCommHandleReceivedPacket(SharedData_t *SharedData)
+{
+  //Serial.print("message to handle: ");
+  //Serial.println(ReceivedPacket[0]);
+  switch (ReceivedPacket[0])
+  {
+  case 1:
+    //Serial.print("The curent gear is: ");
+    //Serial.println(ReceivedPacket[1]);
+    SharedData->CurrentGear = ReceivedPacket[1];
+    break;
+  
+  default:
+    break;
+  }
+}
 
 void USBCommResetButtons(void)
 { 

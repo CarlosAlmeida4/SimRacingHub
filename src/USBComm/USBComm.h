@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include <Adafruit_TinyUSB.h>
 #include <string.h>
+#include "SharedDatatype.h"
 
 // USB HID object
 extern hid_gamepad_report_t gp;
@@ -13,7 +14,8 @@ uint16_t USBCommGet_report_callback(uint8_t report_id, hid_report_type_t report_
 void USBCommSet_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize); 
 
 void USBCommInit(void);
-void USBCommCyclic(void);
+void USBCommHandleReceivedPacket(SharedData_t *SharedData);
+void USBCommCyclic(SharedData_t *SharedData);
 void USBCommResetButtons(void);
 void USBCommSetButtonReport(uint32_t button);
 void USBCommResetButtonReport(uint32_t button);
