@@ -58,8 +58,8 @@ void UIHandlerInit(void)
 void UIHandlerCyclic(SharedData_t *SharedData)
 {
     uint8_t gear = SharedData->CurrentGear;
-    Serial.print("The curent gear is: ");
-    Serial.println(SharedData->CurrentGear);
+    //Serial.print("The curent gear is: ");
+    //Serial.println(SharedData->CurrentGear);
     if(10 == gear)
     {
         _ui_label_set_property(uic_CurrentGear,_UI_LABEL_PROPERTY_TEXT,"R");

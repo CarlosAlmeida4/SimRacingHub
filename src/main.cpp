@@ -21,33 +21,39 @@ SharedData_t SharedData;
 *        MAIN        *
 **********************/
 
-void setup1()
+void setup()
 {
   //usbComm.Init();
+  
   UIHandlerInit();
   IOinput_Obj.InitInputs();
   ShiftingLogic_Obj.initialize();
+  Serial.begin(115200);
   delay(1000);
+  USBCommInit();
 }
 
-void setup() 
+void setup1() 
 {
   //UIHandlerInit();  
-  USBCommInit();
-  Serial.begin(115200);
+  
+  
 }
 
-void loop1()
+void loop()
 {
-  //USBCommCyclicHandler(nullptr);
+  
   UIHandlerCyclic(&SharedData);
   IOinput_Obj.FastCyclic(&SharedData);
+  Serial.println(SharedData.ShiftUpRequest);
   ShiftingLogic_Obj.step(&SharedData);
+  USBCommCyclic(&SharedData);
+  delay(15);
 }
 
-void loop() 
+void loop1() 
 {
-  USBCommCyclic(&SharedData);
+  
   
   //delay(100);
 }

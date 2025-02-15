@@ -22,8 +22,8 @@ void IOinput::FastCyclic(SharedData_t *SharedData)
     IOInputs_ShiftDownRequest.ShiftDownRequest = !digitalRead(IOInputs_ShiftDownRequest.ShiftDownRequestPin);
     SharedData->ShiftDownRequest = IOInputs_ShiftDownRequest.ShiftDownRequest;
     SharedData->ShiftUpRequest = IOInputs_ShiftUpRequest.ShiftUpRequest;
-    //serial.print("Shit Up Request : ");
-    //serial.println(IOInputs_ShiftUpRequest.ShiftUpRequest);
-    //serial.print("Shit Down Request : ");
-    //serial.println(IOInputs_ShiftDownRequest.ShiftDownRequest);
+    //Serial.print("Shit Up Request : ");
+    //Serial.println(IOInputs_ShiftUpRequest.ShiftUpRequest);
+    //Serial.print("Shit Down Request : ");
+    //Serial.println(IOInputs_ShiftDownRequest.ShiftDownRequest);
 }
