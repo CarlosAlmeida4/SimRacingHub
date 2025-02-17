@@ -29,7 +29,6 @@ void setup()
   
   UIHandlerInit();
   IOinput_Obj.InitInputs();
-  ShiftingLogic_Obj.initialize();
   Serial.begin(115200);
   delay(1000);
   USBCommInit();
@@ -37,9 +36,9 @@ void setup()
 
 void setup1() 
 {
-  //UIHandlerInit();  
-  
-  
+  ShiftingLogic_Obj.initialize();
+  delay(2000);
+  USBCommInit();
 }
 
 void loop()
@@ -53,14 +52,7 @@ void loop()
   #ifdef MAIN_DEBUG
   Serial.println("Ran IO Input");
   #endif
-  ShiftingLogic_Obj.step(&SharedData);
-  #ifdef MAIN_DEBUG
-  Serial.println("Ran Shifting logic Handler");
-  #endif
-  USBCommCyclic(&SharedData);
-  #ifdef MAIN_DEBUG
-  Serial.println("Ran USB CommCyclic");
-  #endif
+  
   //delay(15);
   #ifdef MAIN_DEBUG
   Serial.println("SharedData:");
@@ -75,7 +67,14 @@ void loop()
 
 void loop1() 
 {
-  
+  ShiftingLogic_Obj.step(&SharedData);
+  #ifdef MAIN_DEBUG_1
+  Serial.println("Ran Shifting logic Handler");
+  #endif
+  USBCommCyclic(&SharedData);
+  #ifdef MAIN_DEBUG_1
+  Serial.println("Ran USB CommCyclic");
+  #endif
   
   //delay(100);
 }

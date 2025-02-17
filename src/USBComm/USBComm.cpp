@@ -7,7 +7,7 @@
   #error "Requires two HID instances support. See https://github.com/adafruit/Adafruit_TinyUSB_Arduino/commit/b75604f794acdf88daad310dd75d3a0724129056"
 #endif 
 
-#define MAX_PACKET_SIZE 10 //The packet is always 64 bytes
+#define MAX_PACKET_SIZE 5 //The packet is always 64 bytes
 
 // Report ID
 enum
