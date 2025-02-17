@@ -7,7 +7,7 @@
   #error "Requires two HID instances support. See https://github.com/adafruit/Adafruit_TinyUSB_Arduino/commit/b75604f794acdf88daad310dd75d3a0724129056"
 #endif 
 
-#define MAX_PACKET_SIZE 64 //The packet is always 64 bytes
+#define MAX_PACKET_SIZE 10 //The packet is always 64 bytes
 
 // Report ID
 enum
@@ -23,7 +23,7 @@ uint8_t const desc_hid_report_gamepad[] = {
   TUD_HID_REPORT_DESC_GAMEPAD()
 };
 uint8_t const desc_hid_report_inout[] = {
-  TUD_HID_REPORT_DESC_GENERIC_INOUT(64)
+  TUD_HID_REPORT_DESC_GENERIC_INOUT(MAX_PACKET_SIZE)
 };
 
 // USB HID object
@@ -71,7 +71,7 @@ void USBCommInit()
     }   
     // Setup HID
     usb_hid_inout.enableOutEndpoint(true);
-    usb_hid_inout.setPollInterval(2);
+    usb_hid_inout.setPollInterval(10);
     usb_hid_inout.setReportDescriptor(desc_hid_report_inout, sizeof(desc_hid_report_inout));
     usb_hid_inout.setReportCallback(USBCommGet_report_callback,USBCommSet_report_callback);
     usb_hid_inout.begin(); 
