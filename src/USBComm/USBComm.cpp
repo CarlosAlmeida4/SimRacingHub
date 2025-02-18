@@ -112,14 +112,6 @@ void USBCommCyclic(SharedData_t *SharedData)
 
     if (!usb_hid_gamepad.ready() || !usb_hid_inout.ready()) return;
 
-    //ResetButtons(); //TODO check if need to reset the buttons
-    // Test buttons (up to 32 buttons)
-    static int aux = 1;
-    //Serial.print("Pressing button ");
-    //Serial.println(aux);
-    gp.buttons = (1U << aux);
-    usb_hid_gamepad.sendReport(0, &gp, sizeof(gp));
-
     USBCommHandleReceivedPacket(SharedData);
 }
 

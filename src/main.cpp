@@ -6,7 +6,7 @@
 #include "ShifterLogic\ShiftingLogic.h"  
 #include "SharedDatatype.h" //TODO Evaluate if implementing a Mediator class is helpful
 
-#define MAIN_DEBUG
+//#define MAIN_DEBUG_1
 
 /*********************
 *Object Instantiation*
@@ -30,7 +30,7 @@ void setup()
   UIHandlerInit();
   IOinput_Obj.InitInputs();
   Serial.begin(115200);
-  delay(1000);
+  delay(3000);
   USBCommInit();
 }
 
@@ -43,16 +43,14 @@ void setup1()
 
 void loop()
 {
-  
-  UIHandlerCyclic(&SharedData);
-  #ifdef MAIN_DEBUG
-  Serial.println("Ran UI Handler");
-  #endif
   IOinput_Obj.FastCyclic(&SharedData);
   #ifdef MAIN_DEBUG
   Serial.println("Ran IO Input");
   #endif
-  
+  USBCommCyclic(&SharedData);
+  #ifdef MAIN_DEBUG
+  Serial.println("Ran USB CommCyclic");
+  #endif
   //delay(15);
   #ifdef MAIN_DEBUG
   Serial.println("SharedData:");
@@ -67,14 +65,23 @@ void loop()
 
 void loop1() 
 {
+
+  UIHandlerCyclic(&SharedData);
+  #ifdef MAIN_DEBUG_1
+  Serial.println("Ran UI Handler");
+  #endif
   ShiftingLogic_Obj.step(&SharedData);
   #ifdef MAIN_DEBUG_1
   Serial.println("Ran Shifting logic Handler");
   #endif
-  USBCommCyclic(&SharedData);
   #ifdef MAIN_DEBUG_1
-  Serial.println("Ran USB CommCyclic");
+  Serial.println("SharedData:");
+  Serial.print("SharedData.CurrentGear ");
+  Serial.println(SharedData.CurrentGear);
+  Serial.print("SharedData.ShiftUpRequest ");
+  Serial.println(SharedData.ShiftUpRequest);
+  Serial.print("SharedData.ShiftDownRequest ");
+  Serial.println(SharedData.ShiftDownRequest);
   #endif
-  
   //delay(100);
 }
